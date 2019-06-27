@@ -1,12 +1,69 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import { withFormik, Form, Field } from "formik";
+import * as yup from "yup";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const App = ({ values, errors, touched }) => (
+  <Form>
+    <div>
+      <Field
+        type="email"
+        name="email"
+        placeholder="Email"
+        value={values.email}
+      />
+      {touched.email && errors.email && <p>{errors.email}</p>}
+    </div>
+    <div>
+      <Field
+        type="password"
+        name="password"
+        placeholder="Password"
+        value={values.password}
+      />
+      {touched.password && errors.password && <p>{errors.password}</p>}
+    </div>
+    <label>
+      <Field type="checkbox" name="newsletter" checked={values.newsletter} />
+      Join our newsletter
+    </label>
+    <Field component="select" name="plan">
+      <option value="free">Free</option>
+      <option value="premium">Premium</option>
+    </Field>
+    <button type="submit">Submit</button>
+  </Form>
+);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const FormikApp = withFormik({
+  mapPropsToValues({ email, password, newsletter, plan }) {
+    return {
+      email: email || "",
+      password: password || "",
+      newsletter: newsletter || true,
+      plan: plan || "premium"
+    };
+  },
+  validationSchema: yup.object().shape({
+    email: yup
+      .string()
+      .email("Email non valida")
+      .required("Email obbligatoria"),
+    password: yup
+      .string()
+      .min(9, "La password deve essere almeno 9 caratteri")
+      .required("Password obbligatoria")
+  }),
+  handleSubmit(values, { resetForm, setErrors, setSubmitting }) {
+    setTimeout(() => {
+      if (values.email === "prova@prova.com") {
+        setErrors({ email: "Questo è imbarazzante" });
+      } else {
+        resetForm();
+      }
+    }, 2000);
+  }
+})(App);
+
+ReactDOM.render(<FormikApp />, document.getElementById("root"));
