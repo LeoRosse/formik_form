@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { withFormik, Form, Field } from "formik";
 import * as yup from "yup";
+import TextField from "@material-ui/core/TextField";
 
 const App = ({ values, errors, touched }) => (
   <Form>
@@ -12,6 +13,19 @@ const App = ({ values, errors, touched }) => (
         name="email"
         placeholder="Email"
         value={values.email}
+        render={({ field, form }) => {
+          return (
+            <TextField
+              id="outlined-name"
+              label="Email"
+              value={field.value}
+              name={field.name}
+              onChange={e => form.setFieldValue(field.name, e.target.value)}
+              margin="normal"
+              variant="outlined"
+            />
+          );
+        }}
       />
       {touched.email && errors.email && <p>{errors.email}</p>}
     </div>
