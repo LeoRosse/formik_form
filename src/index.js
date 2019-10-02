@@ -9,32 +9,47 @@ const App = ({ values, errors, touched }) => (
   <Form>
     <div>
       <Field
-        type="email"
         name="email"
-        placeholder="Email"
         value={values.email}
         render={({ field, form }) => {
           return (
             <TextField
-              id="outlined-name"
+              id="email"
               label="Email"
               value={field.value}
               name={field.name}
               onChange={e => form.setFieldValue(field.name, e.target.value)}
               margin="normal"
               variant="outlined"
+              error={touched.email && errors.email}
+              helperText={touched.email && errors.email && `${errors.email}`}
             />
           );
         }}
       />
-      {touched.email && errors.email && <p>{errors.email}</p>}
     </div>
     <div>
       <Field
-        type="password"
         name="password"
-        placeholder="Password"
         value={values.password}
+        render={({ field, form }) => {
+          return (
+            <TextField
+              id="password"
+              label="Password"
+              value={field.value}
+              name={field.name}
+              onChange={e => form.setFieldValue(field.name, e.target.value)}
+              margin="normal"
+              type="password"
+              variant="outlined"
+              error={touched.password && errors.password}
+              helperText={
+                touched.password && errors.password && `${errors.password}`
+              }
+            />
+          );
+        }}
       />
       {touched.password && errors.password && <p>{errors.password}</p>}
     </div>
